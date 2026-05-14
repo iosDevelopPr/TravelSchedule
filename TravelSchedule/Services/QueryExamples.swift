@@ -102,25 +102,25 @@ final class QueryExamples {
         }
     }
     
-    static func getScheduleBetweenStations() {
-        Task {
-            do {
-                let client = getClient()
-                let service = SearchService(
-                    client: client,
-                    apiKey: ApiParams.apiKey
-                )
-                
-                print("Fetching search...")
-                let search = try await service.getScheduleBetweenStations(
-                    from: "c146", to: "c213", date: "2026-04-08"
-                )
-                print("Successfully fetched search: \(search)")
-            } catch {
-                print("Error fetching search: \(error)")
-            }
-        }
-    }
+//    static func getScheduleBetweenStations() {
+//        Task {
+//            do {
+//                let client = getClient()
+//                let service = SearchService(
+//                    client: client,
+//                    apiKey: ApiParams.apiKey
+//                )
+//                
+//                print("Fetching search...")
+//                let search = try await service.getScheduleBetweenStations(
+//                    from: "c146", to: "c213", date: "2026-04-08"
+//                )
+//                print("Successfully fetched search: \(search)")
+//            } catch {
+//                print("Error fetching search: \(error)")
+//            }
+//        }
+//    }
     
     static func getAllStations() {
         Task {

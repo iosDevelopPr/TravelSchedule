@@ -5,7 +5,7 @@ import OpenAPIURLSession
 typealias SearchResult = Components.Schemas.Segments
 
 protocol SearchServiceProtocol {
-    func getScheduleBetweenStations(from: String, to: String, date: String?) async throws -> SearchResult
+    func getScheduleBetweenStations(from: String, to: String, date: String?, transportTypes: String, transfers: Bool) async throws -> SearchResult
 }
 
 final class SearchService: SearchServiceProtocol {
@@ -17,13 +17,22 @@ final class SearchService: SearchServiceProtocol {
         self.apiKey = apiKey
     }
     
-    func getScheduleBetweenStations(from: String, to: String, date: String? = nil) async throws -> SearchResult {
+    func getScheduleBetweenStations(
+        from: String,
+        to: String,
+        date: String? = nil,
+        transportTypes: String,
+        transfers: Bool
+    ) async throws -> SearchResult {
         let response = try await client.getScheduleBetweenStations(
             query: .init(
                 apikey: apiKey,
                 from: from,
                 to: to,
-                date: date ?? "")
+                date: date ?? "",
+                transport_types: transportTypes,
+                transfers: transfers
+            )
         )
         return try response.ok.body.json
     }
