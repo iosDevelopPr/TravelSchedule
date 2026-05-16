@@ -20,19 +20,22 @@ final class StationListService: StationListServiceProtocol {
     }
     
     func getAllStations() async throws -> AllStations {
-        let response = try await client.getAllStations(
-            query: .init(apikey: apiKey)
-        )
-        
-        let htmlResponse = try response.ok.body.html
-        let data = try await Data(collecting: htmlResponse, upTo: .max)
-        
         do {
+            let response = try await client.getAllStations(
+                query: .init(apikey: apiKey)
+            )
+            
+            let htmlResponse = try response.ok.body.html
+            let data = try await Data(collecting: htmlResponse, upTo: .max)
+        
             let stationsList = try JSONDecoder().decode(AllStations.self, from: data)
             return stationsList
         } catch {
             print(String(describing: error))
-            return AllStations()
+            if let clientError = error as? ClientError {
+                throw ErrorsType.connectionError
+            }
+            throw ErrorsType.serverError
         }
     }
 }
