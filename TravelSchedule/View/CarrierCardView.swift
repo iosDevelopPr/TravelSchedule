@@ -11,6 +11,8 @@ struct CarrierCardView: View {
     @State var travelTime: String = ""
     @State var arrivalTime: String = ""
     
+    private let notInfo = "Информации нет"
+    
     init(segment: Segment) {
         self.segment = segment
     }
@@ -38,7 +40,7 @@ struct CarrierCardView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     
                     VStack(alignment: .leading) {
-                        Text(segment.thread?.carrier?.title ?? "Информации нет")
+                        Text(segment.thread?.carrier?.title ?? notInfo)
                             .font(.regular17)
                         Text("С пересадкой в: \(segment.transfers?.first?.title ?? "")")
                             .font(.regular12)
@@ -93,4 +95,5 @@ struct CarrierCardView: View {
 
 #Preview {
     CarrierCardView(segment: Segment())
+        .environmentObject(TravelViewModel())
 }

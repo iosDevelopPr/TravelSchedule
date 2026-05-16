@@ -19,11 +19,11 @@ final class TravelViewModel: ObservableObject {
     @Published var isEvening = false
     @Published var isNight = false
     @Published var isHasTransfers: Bool?
-
-    //@Published var carrier: Carrier?
     
     @Published var isFilter: Bool = false
     @Published var isLoading: Bool = true
+    
+    @Published var isError: ErrorsType?
     
     private let viewTypes = ViewTypes.shared
     private let dataProvider: DataProviderProtocol
@@ -33,9 +33,7 @@ final class TravelViewModel: ObservableObject {
         dataProvider = DataProvider()
         dateFormatter = DateFormatter()
         
-        Task {
-            await loadCities()
-        }
+        Task { await loadCities() }
     }
     
     func setSettlement(settlement: Settlement, direction: Direction) {
@@ -166,8 +164,6 @@ final class TravelViewModel: ObservableObject {
         return dateFormatter.string(from: localDate)
     }
     
-    //////////////////////////////////////////////////////////////////////
-    
     func getSearchSettings() -> SearchSettings {
         let searchSettings = SearchSettings()
         
@@ -245,7 +241,7 @@ final class TravelViewModel: ObservableObject {
     @MainActor
     private func loadCities() async {
         var stationList: [Settlement] = []
-        let testSettlements = ["Москва", "Санкт-Петербург", "Сочи", "Горный воздух", "Краснодар", "Казань", "Омск", "Уфа"]
+        let testSettlements = ["Москва", "Санкт-Петербург", "Сочи", "Уфа", "Краснодар", "Казань", "Омск", "Владивосток"]
         
         do {
             let allStation = try await dataProvider.getStationList()
@@ -253,18 +249,18 @@ final class TravelViewModel: ObservableObject {
                 .flatMap { $0.regions ?? []}
                 .flatMap { $0.settlements ?? [] }
                 .filter { testSettlements.contains($0.title ?? "") } ?? []
+            
+            settlements = stationList.filter { $0.title != "" }
+            isLoading = settlements.isEmpty
+            settlements.sort { $0.title ?? "" < $1.title ?? "" }
         } catch {
-            print (error.localizedDescription)
+            isError = error as? ErrorsType
+            addView(type: .errorView)
         }
-        
-        settlements = stationList.filter { $0.title != "" }
-        isLoading = settlements.isEmpty
-        settlements.sort { $0.title ?? "" < $1.title ?? "" }
     }
     
     @MainActor
     func searchCarrier() async {
-        //isLoading = true
         
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let date = dateFormatter.string(from: Date())
@@ -282,14 +278,16 @@ final class TravelViewModel: ObservableObject {
             )
             
             carriersList = searchResult.segments ?? []
-            filteredCarriersList = carriersList.filter() {
+            carriersList = carriersList.filter() {
                 guard $0.thread != nil else { return false }
                 return true
             }
+            filteredCarriersList = carriersList
             routeFiltering()
             
         } catch {
-            print(error.localizedDescription)
+            isError = error as? ErrorsType
+            addView(type: .errorView)
         }
         
         isLoading = false

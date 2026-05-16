@@ -4,6 +4,10 @@ import SwiftUI
 struct ScheduleView: View {
     @EnvironmentObject private var viewModel: TravelViewModel
     
+    private let titleFrom = "Откуда"
+    private let titleTo = "Куда"
+    private let titleFind = "Найти"
+
     var body: some View {
         ZStack {
             Color.trWhite.ignoresSafeArea()
@@ -15,7 +19,7 @@ struct ScheduleView: View {
                             DestinationView(
                                 settlement: viewModel.getNameSettlement(direction: .from) ,
                                 station: viewModel.getNameStation(direction: .from),
-                                placeholder: "Откуда"
+                                placeholder: titleFrom
                             )
                             .onTapGesture {
                                 viewModel.addView(type: .fromCityView)
@@ -24,7 +28,7 @@ struct ScheduleView: View {
                             DestinationView(
                                 settlement: viewModel.getNameSettlement(direction: .to),
                                 station: viewModel.getNameStation(direction: .to),
-                                placeholder: "Куда"
+                                placeholder: titleTo
                             )
                             .onTapGesture {
                                 viewModel.addView(type: .toCityView)
@@ -59,7 +63,7 @@ struct ScheduleView: View {
                     }
                     viewModel.addView(type: .carrierView)
                 } label: {
-                    Text("Найти")
+                    Text(titleFind)
                         .font(.bold17)
                         .foregroundStyle(.white)
                         .frame(width: 150, height: 60)
@@ -74,4 +78,5 @@ struct ScheduleView: View {
 
 #Preview {
     ScheduleView()
+        .environmentObject(TravelViewModel())
 }

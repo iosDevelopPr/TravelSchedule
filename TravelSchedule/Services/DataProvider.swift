@@ -48,7 +48,7 @@ final class DataProvider: DataProviderProtocol {
             date: date,
             transportTypes: transportTypes,
             transfers: transfers
-        )
+        )       
         return carriers
     }
     

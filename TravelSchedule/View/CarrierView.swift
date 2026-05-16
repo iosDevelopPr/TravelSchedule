@@ -5,6 +5,7 @@ struct CarrierView: View {
     @EnvironmentObject private var viewModel: TravelViewModel
     
     private let textNotFound = "Вариантов нет"
+    private let textSpecify = "Уточнить время"
 
     var body: some View {
         ZStack {
@@ -19,28 +20,36 @@ struct CarrierView: View {
                 if viewModel.isLoading {
                     Spacer()
                     ProgressView()
-                } else if !viewModel.filteredCarriersList.isEmpty {
+                    Spacer()
+                } else {
                     ZStack(alignment: .bottom) {
-                        ScrollView {
-                            LazyVStack(spacing: 8) {
-                                ForEach(viewModel.filteredCarriersList, id: \.self) { segment in
-                                    CarrierCardView(segment: segment)
-                                        .frame(height: 104)
-                                        .onTapGesture {
-                                            viewModel.addView(type: .carrierInfoView)
-                                        }
-                                }
-                            }
-                        }
-                        .scrollIndicators(.hidden)
                         
                         VStack {
-                            Spacer()
+                            if !viewModel.filteredCarriersList.isEmpty {
+                                ScrollView {
+                                    LazyVStack(spacing: 8) {
+                                        ForEach(viewModel.filteredCarriersList, id: \.self) { segment in
+                                            CarrierCardView(segment: segment)
+                                                .frame(height: 104)
+                                                .onTapGesture {
+                                                    viewModel.addView(type: .carrierInfoView)
+                                                }
+                                        }
+                                    }
+                                }
+                                .scrollIndicators(.hidden)
+                            } else {
+                                Spacer()
+                                Text(textNotFound)
+                                    .font(.bold24)
+                                Spacer()
+                            }
+                            
                             Button {
                                 viewModel.addView(type: .filtersView)
                             } label: {
                                 HStack {
-                                    Text("Уточнить время")
+                                    Text(textSpecify)
                                         .font(.bold17)
                                         .foregroundStyle(.trWhiteOnly)
                                     Circle()
@@ -54,19 +63,15 @@ struct CarrierView: View {
                             .padding(.bottom, 8)
                         }
                     }
-                } else {
-                    Spacer()
-                    Text(textNotFound)
-                        .font(.bold24)
                 }
-                Spacer()
-                    .toolbarRole(.editor)
             }
             .padding(16)
+            .toolbarRole(.editor)
         }
     }
 }
 
 #Preview {
     CarrierView()
+        .environmentObject(TravelViewModel())
 }

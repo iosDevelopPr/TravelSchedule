@@ -34,9 +34,9 @@ struct CityView: View {
                             TextField(placeholder, text: $cityName)
                                 .font(.regular17)
                                 .padding(.leading, 8)
-                                .onAppear {
-                                    cityName = viewModel.getNameSettlement(direction: direction)
-                                }
+//                                .onAppear {
+//                                    cityName = viewModel.getNameSettlement(direction: direction)
+//                                }
                         }
                         .padding()
                         .cornerRadius(16)
@@ -117,6 +117,7 @@ struct CityView: View {
     }
 }
 
-//#Preview {
-//    CityView(direction: .from)
-//}
+#Preview {
+    CityView(direction: .from)
+        .environmentObject(TravelViewModel())
+}

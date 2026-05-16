@@ -21,14 +21,16 @@ struct ContentView: View {
                 TabView {
                     ScheduleView()
                         .tabItem {
-                            Image("ScheduleTab")
+                            Image(.scheduleTab)
                                 .renderingMode(.template)
                         }
+                        .environmentObject(viewModel)
                     SettingsView()
                         .tabItem {
-                            Image("SettingsTab")
+                            Image(.settingsTab)
                                 .renderingMode(.template)
                         }
+                        .environmentObject(viewModel)
                 }
                 .navigationDestination(for: ViewType.self) { path in
                     switch path {
@@ -36,18 +38,26 @@ struct ContentView: View {
                         AgreementView()
                     case ViewType.fromCityView:
                         CityView(direction: .from)
+                            .environmentObject(viewModel)
                     case ViewType.toCityView:
                         CityView(direction: .to)
+                            .environmentObject(viewModel)
                     case ViewType.fromStationView:
                         StationView(direction: .from)
+                            .environmentObject(viewModel)
                     case ViewType.toStationView:
                         StationView(direction: .to)
+                            .environmentObject(viewModel)
                     case ViewType.carrierView:
                         CarrierView()
+                            .environmentObject(viewModel)
                     case .carrierInfoView:
                         CarrierInfoView()
                     case .filtersView:
                         FiltersView(searchSettings: viewModel.getSearchSettings())
+                            .environmentObject(viewModel)
+                    case .errorView:
+                        ErrorsView(error: viewModel.isError ?? .serverError)
                     }
                 }
             }
@@ -56,17 +66,7 @@ struct ContentView: View {
     }
 }
 
-//#Preview {
-//    ContentView()
-//}
-
-func testFetchStation() {
-//    QueryExamples.getNearestStations()
-//    QueryExamples.getCarrierInfo()
-//    QueryExamples.getCopyright()
-//    QueryExamples.getNearestCity()
-//    QueryExamples.getStationSchedule()
-//    QueryExamples.getScheduleBetweenStations()
-//    QueryExamples.getAllStations()
-//    QueryExamples.getRouteStations()
+#Preview {
+    ContentView()
+        .environmentObject(TravelViewModel())
 }

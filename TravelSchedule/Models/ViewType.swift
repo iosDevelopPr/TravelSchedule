@@ -10,4 +10,5 @@ enum ViewType: Hashable {
     case carrierView
     case carrierInfoView
     case filtersView
+    case errorView
 }

@@ -106,4 +106,5 @@ struct StationView: View {
 
 #Preview {
     StationView(direction: .from)
+        .environmentObject(TravelViewModel())
 }

@@ -2,6 +2,9 @@
 import SwiftUI
 
 struct CarrierInfoView: View {
+    
+    private let titleNavigation = "Информация о перевозчике"
+    
     var body: some View {
         ZStack {
             Color.trWhite.ignoresSafeArea()
@@ -9,7 +12,7 @@ struct CarrierInfoView: View {
                 
                 Spacer()
                     .toolbarRole(.editor)
-                    .navigationTitle("Информация о перевозчике")
+                    .navigationTitle(titleNavigation)
 
             }
             .foregroundStyle(.trBlack)

@@ -6,6 +6,10 @@ struct FiltersView: View {
     @EnvironmentObject private var viewModel: TravelViewModel
     @ObservedObject var searchSettings: SearchSettings
     
+    private let timeDeparture = "Отправление"
+    private let optionsTransfers = "Показывать варианты с пересадками"
+    private let titleApply = "Применить"
+    
     init(searchSettings: SearchSettings) {
         self.searchSettings = searchSettings
     }
@@ -14,7 +18,7 @@ struct FiltersView: View {
         ZStack {
             Color.trWhite.ignoresSafeArea()
             VStack(alignment: .leading, spacing: 16) {
-                Text("Время отправления")
+                Text(timeDeparture)
                     .font(.bold24)
                 
                 VStack(alignment: .leading, spacing: 0) {
@@ -24,7 +28,7 @@ struct FiltersView: View {
                     TimeIntervalView(isOn: $searchSettings.isNight, timeInterval: .night)
                 }
                 
-                Text("Показывать варианты с пересадками")
+                Text(optionsTransfers)
                     .font(.bold24)
                 
                 VStack(alignment: .leading, spacing: 0) {
@@ -38,7 +42,7 @@ struct FiltersView: View {
                     viewModel.setSearchSettings(searchSettings: searchSettings)
                     viewModel.stepBack()
                 } label: {
-                    Text("Применить")
+                    Text(titleApply)
                         .padding()
                         .font(.bold17)
                         .foregroundStyle(.trWhiteOnly)
@@ -56,4 +60,5 @@ struct FiltersView: View {
 
 #Preview {
     FiltersView(searchSettings: SearchSettings())
+        .environmentObject(TravelViewModel())
 }

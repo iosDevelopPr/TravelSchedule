@@ -1,4 +1,6 @@
 
+import Foundation
+
 import OpenAPIRuntime
 import OpenAPIURLSession
 
@@ -24,16 +26,24 @@ final class SearchService: SearchServiceProtocol {
         transportTypes: String,
         transfers: Bool
     ) async throws -> SearchResult {
-        let response = try await client.getScheduleBetweenStations(
-            query: .init(
-                apikey: apiKey,
-                from: from,
-                to: to,
-                date: date ?? "",
-                transport_types: transportTypes,
-                transfers: transfers
+        do {
+            let response = try await client.getScheduleBetweenStations(
+                query: .init(
+                    apikey: apiKey,
+                    from: from,
+                    to: to,
+                    date: date ?? "",
+                    transport_types: transportTypes,
+                    transfers: transfers
+                )
             )
-        )
-        return try response.ok.body.json
+            return try response.ok.body.json
+        } catch {
+            print (error.localizedDescription)
+            if let clientError = error as? ClientError {
+                throw ErrorsType.connectionError
+            }
+            throw ErrorsType.serverError
+        }
     }
 }

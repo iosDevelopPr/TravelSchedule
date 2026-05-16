@@ -1,6 +1,5 @@
 
 import Foundation
-//import SwiftUI
 
 enum TimeInterval: String {
     case morning = "Утро 06:00 - 12:00"
@@ -14,6 +13,5 @@ final class SearchSettings: ObservableObject {
     @Published var isAfternoon = false
     @Published var isEvening = false
     @Published var isNight = false
-    
     @Published var isHasTransfers: Bool?
 }
