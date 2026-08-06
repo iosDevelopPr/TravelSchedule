@@ -1,7 +1,7 @@
 
 import Foundation
 
-enum TimeInterval: String {
+enum TimeIntervals: String {
     case morning = "Утро 06:00 - 12:00"
     case afternoon = "День 12:00 - 18:00"
     case evening = "Вечер 18:00 - 00:00"
@@ -14,4 +14,8 @@ final class SearchSettings: ObservableObject {
     @Published var isEvening = false
     @Published var isNight = false
     @Published var isHasTransfers: Bool?
+    
+    var isFilter: Bool {
+        isMorning || isAfternoon || isEvening || isNight || isHasTransfers == true || isHasTransfers == false
+    }
 }
