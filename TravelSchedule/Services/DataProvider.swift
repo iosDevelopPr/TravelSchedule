@@ -11,12 +11,15 @@ typealias Carrier = Components.Schemas.Carrier
 typealias Station = Components.Schemas.Station
 typealias Segment = Components.Schemas.Segment
 
-protocol DataProviderProtocol {
+protocol DataProviderStationProtocol {
     func getStationList() async throws -> AllStations
-    func getSearchResult(fromCode: String, toCode: String, date: String, transportTypes: String, transfers: Bool) async throws -> SearchResult
 }
 
-final class DataProvider: DataProviderProtocol {
+protocol DataProviderSearchProtocol {
+    func getSearchResult(fromCode: String, toCode: String, date: String) async throws -> SearchResult
+}
+
+final class DataProvider: DataProviderStationProtocol, DataProviderSearchProtocol {
     
     func getStationList() async throws -> AllStations {
 
@@ -32,8 +35,8 @@ final class DataProvider: DataProviderProtocol {
         return allStation
     }
     
-    func getSearchResult(fromCode: String, toCode: String, date: String, transportTypes: String, transfers: Bool) async throws -> SearchResult {
-        
+    func getSearchResult(fromCode: String, toCode: String, date: String) async throws -> SearchResult {
+
         let client = getClient()
         guard let client else { return SearchResult() }
         
@@ -46,9 +49,9 @@ final class DataProvider: DataProviderProtocol {
             from: fromCode,
             to: toCode,
             date: date,
-            transportTypes: transportTypes,
-            transfers: transfers
-        )       
+            transportTypes: "train",
+            transfers: true
+        )
         return carriers
     }
     

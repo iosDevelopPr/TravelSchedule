@@ -2,20 +2,18 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject private var viewModel: TravelViewModel
-    @ObservedObject var viewTypes = ViewTypes.shared
-    
-    init () {
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .trWhite
-        appearance.shadowColor = .trBarDivider
-        
-        UITabBar.appearance().scrollEdgeAppearance = appearance
+    // MARK: - Properties
+    @EnvironmentObject private var navigation: Navigation
+    @EnvironmentObject private var carriersViewModel: CarrierSearchViewModel
+    @EnvironmentObject private var errorsSetting: ErrorsSetting
+
+    init() {
+        setupTabBarAppearance()
     }
     
+    // MARK: - Body
     var body: some View {
-        NavigationStack(path: $viewTypes.path) {
+        NavigationStack(path: $navigation.path) {
             ZStack {
                 Color.trWhite.ignoresSafeArea()
                 TabView {
@@ -24,49 +22,49 @@ struct ContentView: View {
                             Image(.scheduleTab)
                                 .renderingMode(.template)
                         }
-                        .environmentObject(viewModel)
                     SettingsView()
                         .tabItem {
                             Image(.settingsTab)
                                 .renderingMode(.template)
                         }
-                        .environmentObject(viewModel)
                 }
-                .navigationDestination(for: ViewType.self) { path in
-                    switch path {
-                    case ViewType.agreementView:
+                .navigationDestination(for: NavigationTypes.self) { type in
+                    switch type {
+                    case .agreement:
                         AgreementView()
-                    case ViewType.fromCityView:
-                        CityView(direction: .from)
-                            .environmentObject(viewModel)
-                    case ViewType.toCityView:
-                        CityView(direction: .to)
-                            .environmentObject(viewModel)
-                    case ViewType.fromStationView:
+                    case .fromCity:
+                        SettlementView(direction: .from)
+                    case .toCity:
+                        SettlementView(direction: .to)
+                    case .fromStation:
                         StationView(direction: .from)
-                            .environmentObject(viewModel)
-                    case ViewType.toStationView:
+                    case .toStation:
                         StationView(direction: .to)
-                            .environmentObject(viewModel)
-                    case ViewType.carrierView:
+                    case .carrier:
                         CarrierView()
-                            .environmentObject(viewModel)
-                    case .carrierInfoView:
+                    case .error:
+                        ErrorsView(error: errorsSetting.isError ?? .serverError)
+                    case .carrierInfo:
                         CarrierInfoView()
-                    case .filtersView:
-                        FiltersView(searchSettings: viewModel.getSearchSettings())
-                            .environmentObject(viewModel)
-                    case .errorView:
-                        ErrorsView(error: viewModel.isError ?? .serverError)
+                    case .filters:
+                        FiltersView(searchSettings: carriersViewModel.getSearchSettings())
                     }
                 }
             }
         }
         .tint(.trBlack)
     }
+    
+    private func setupTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .trWhite
+        appearance.shadowColor = .trBarDivider
+        
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
 }
 
 #Preview {
     ContentView()
-        .environmentObject(TravelViewModel())
 }

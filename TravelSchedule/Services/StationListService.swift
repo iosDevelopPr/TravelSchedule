@@ -10,15 +10,7 @@ protocol StationListServiceProtocol {
     func getAllStations() async throws -> AllStations
 }
 
-final class StationListService: StationListServiceProtocol {
-    private let client: Client
-    private let apiKey: String
-    
-    init(client: Client, apiKey: String) {
-        self.client = client
-        self.apiKey = apiKey
-    }
-    
+final class StationListService: BaseService, StationListServiceProtocol {
     func getAllStations() async throws -> AllStations {
         do {
             let response = try await client.getAllStations(
@@ -31,7 +23,6 @@ final class StationListService: StationListServiceProtocol {
             let stationsList = try JSONDecoder().decode(AllStations.self, from: data)
             return stationsList
         } catch {
-            print(String(describing: error))
             if let clientError = error as? ClientError {
                 throw ErrorsType.connectionError
             }

@@ -10,15 +10,7 @@ protocol SearchServiceProtocol {
     func getScheduleBetweenStations(from: String, to: String, date: String?, transportTypes: String, transfers: Bool) async throws -> SearchResult
 }
 
-final class SearchService: SearchServiceProtocol {
-    private let client: Client
-    private let apiKey: String
-    
-    init(client: Client, apiKey: String) {
-        self.client = client
-        self.apiKey = apiKey
-    }
-    
+final class SearchService: BaseService, SearchServiceProtocol {
     func getScheduleBetweenStations(
         from: String,
         to: String,
@@ -39,7 +31,6 @@ final class SearchService: SearchServiceProtocol {
             )
             return try response.ok.body.json
         } catch {
-            print (error.localizedDescription)
             if let clientError = error as? ClientError {
                 throw ErrorsType.connectionError
             }
