@@ -39,13 +39,16 @@ final class StationListViewModel: ObservableObject {
     }
     
     func getCities(cityName: String) -> [Settlement] {
-        if cityName.isEmpty {
-            return settlements
-        } else {
-            return settlements.filter {
-                $0.title?.contains(cityName.capitalized) ?? false
-            }
+        return cityName.isEmpty ? settlements : settlements.filter {
+            $0.title?.contains(cityName.capitalized) ?? false
         }
+//        if cityName.isEmpty {
+//            return settlements
+//        } else {
+//            return settlements.filter {
+//                $0.title?.contains(cityName.capitalized) ?? false
+//            }
+//        }
     }
     
     func getStationList(settlement: Settlement) -> [Station] {

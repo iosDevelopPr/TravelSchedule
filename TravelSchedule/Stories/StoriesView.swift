@@ -18,7 +18,8 @@ struct StoriesView: View {
                         }
                 }
             }
-            .padding([.leading, .trailing], 16)
+            //.padding([.leading, .trailing], 16)
+            .padding(16)
         }
         .scrollIndicators(.hidden)
         .frame(height: 188)
