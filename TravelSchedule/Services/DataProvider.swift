@@ -15,18 +15,18 @@ protocol DataProviderStationProtocol {
     func getStationList() async throws -> AllStations
 }
 
-protocol DataProviderSearchProtocol {
+protocol DataProviderSearchProtocol: Sendable {
     func getSearchResult(fromCode: String, toCode: String, date: String) async throws -> SearchResult
 }
 
-final class DataProvider: DataProviderStationProtocol, DataProviderSearchProtocol {
+actor DataProvider: DataProviderStationProtocol, DataProviderSearchProtocol {
     
     func getStationList() async throws -> AllStations {
 
         let client = getClient()
-        guard let client else { return AllStations() }
+        guard let client else { return await AllStations() }
         
-        let service = StationListService(
+        let service = await StationListService(
             client: client,
             apiKey: ApiParams.apiKey
         )
@@ -38,9 +38,9 @@ final class DataProvider: DataProviderStationProtocol, DataProviderSearchProtoco
     func getSearchResult(fromCode: String, toCode: String, date: String) async throws -> SearchResult {
 
         let client = getClient()
-        guard let client else { return SearchResult() }
+        guard let client else { return await SearchResult() }
         
-        let service = SearchService(
+        let service = await SearchService(
             client: client,
             apiKey: ApiParams.apiKey
         )
@@ -55,7 +55,7 @@ final class DataProvider: DataProviderStationProtocol, DataProviderSearchProtoco
         return carriers
     }
     
-    func getClient() -> Client? {
+    private func getClient() -> Client? {
         var url: URL?
         
         do {
