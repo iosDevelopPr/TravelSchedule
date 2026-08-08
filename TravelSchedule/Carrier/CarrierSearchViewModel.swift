@@ -154,7 +154,11 @@ final class CarrierSearchViewModel: ObservableObject {
         let date = dateFormatter.string(from: Date())
         
         guard let fromCode = fromStation?.codes?.yandex_code,
-              let toCode = toStation?.codes?.yandex_code else { return }
+              let toCode = toStation?.codes?.yandex_code else
+        {
+            isLoading = false
+            return
+        }
         
         do {
             let searchResult = try await dataProvider.getSearchResult(

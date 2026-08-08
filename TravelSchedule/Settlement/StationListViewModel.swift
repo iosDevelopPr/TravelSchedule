@@ -13,12 +13,10 @@ final class StationListViewModel: ObservableObject {
 
     init(dataProvider: DataProviderStationProtocol) {
         self.dataProvider = dataProvider
-        
-        Task { await loadCities() }
     }
     
     @MainActor
-    private func loadCities() async {
+    func loadCities() async {
         var stationList: [Settlement] = []
         
         do {

@@ -47,12 +47,10 @@ struct ScheduleView: View {
                                 .frame(width: 36, height: 36)
                                 .background(.trWhiteOnly)
                                 .clipShape(.rect(cornerRadius: 40))
-                                //.cornerRadius(40)
                         }
                     }
                     .padding(16)
                 }
-                //.cornerRadius(20)
                 .clipShape(.rect(cornerRadius: 20))
                 .padding(.horizontal, 16)
                 .frame(height: 128)
@@ -67,7 +65,6 @@ struct ScheduleView: View {
                         .frame(width: 150, height: 60)
                         .background(.trBlue)
                         .clipShape(.rect(cornerRadius: 16))
-                        //.cornerRadius(16)
                 }
                 .opacity(stationViewModel.getSearchEnable() ? 1 : 0)
                 Spacer()
