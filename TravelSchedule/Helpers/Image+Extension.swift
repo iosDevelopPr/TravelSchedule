@@ -6,10 +6,10 @@ enum ImageString: String {
     case closeButton = "xmark.circle.fill"
     case magnifyingGlass = "magnifyingglass"
     case checkmarkSquareFill = "checkmark.square.fill"
-    case square = "square"
+    case square
     case largeCircleFillCircle = "largecircle.fill.circle"
-    case circle = "circle"
-    case photo = "photo"
+    case circle
+    case photo
 }
 
 extension Image {

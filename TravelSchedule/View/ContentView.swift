@@ -4,6 +4,7 @@ import SwiftUI
 struct ContentView: View {
     // MARK: - Properties
     @EnvironmentObject private var navigation: Navigation
+    @EnvironmentObject private var stationListViewModel: StationListViewModel
     @EnvironmentObject private var carriersViewModel: CarrierSearchViewModel
     @EnvironmentObject private var errorsSetting: ErrorsSetting
 
@@ -53,6 +54,9 @@ struct ContentView: View {
             }
         }
         .tint(.trBlack)
+        .task {
+            await stationListViewModel.loadCities()
+        }
     }
     
     private func setupTabBarAppearance() {

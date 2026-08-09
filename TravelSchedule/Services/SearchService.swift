@@ -6,11 +6,19 @@ import OpenAPIURLSession
 
 typealias SearchResult = Components.Schemas.Segments
 
-protocol SearchServiceProtocol {
+protocol SearchServiceProtocol: Sendable {
     func getScheduleBetweenStations(from: String, to: String, date: String?, transportTypes: String, transfers: Bool) async throws -> SearchResult
 }
 
-final class SearchService: BaseService, SearchServiceProtocol {
+actor SearchService: SearchServiceProtocol {
+    private(set) var client: Client
+    private(set) var apiKey: String
+    
+    init(client: Client, apiKey: String) {
+        self.client = client
+        self.apiKey = apiKey
+    }
+
     func getScheduleBetweenStations(
         from: String,
         to: String,
@@ -29,9 +37,9 @@ final class SearchService: BaseService, SearchServiceProtocol {
                     transfers: transfers
                 )
             )
-            return try response.ok.body.json
+            return try await response.ok.body.json
         } catch {
-            if let clientError = error as? ClientError {
+            if error is ClientError {
                 throw ErrorsType.connectionError
             }
             throw ErrorsType.serverError

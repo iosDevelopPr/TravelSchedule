@@ -21,7 +21,7 @@ final class CarrierSearchViewModel: ObservableObject {
     
     var segment: Segment {
         get {
-            return Segment()
+            Segment()
         }
         set {
             self.carrier = newValue.thread?.carrier
@@ -29,23 +29,23 @@ final class CarrierSearchViewModel: ObservableObject {
     }
     
     var carrierTitle: String {
-        return carrier?.title ?? noInfo
+        carrier?.title ?? noInfo
     }
     
     var logo: String {
-        return carrier?.logo ?? ""
+        carrier?.logo ?? ""
     }
     
     var email: String {
-        return carrier?.email ?? noInfo
+        carrier?.email ?? noInfo
     }
     
     var phone: String {
-        return carrier?.phone ?? noInfo
+        carrier?.phone ?? noInfo
     }
     
     var isFilter: Bool {
-        return searchSettings.isFilter
+        searchSettings.isFilter
     }
     
     init(dataProvider: DataProviderSearchProtocol) {
@@ -99,7 +99,7 @@ final class CarrierSearchViewModel: ObservableObject {
         
         filteredCarriersList = carriersList
 
-        if !searchSettings.isFilter { return }
+        guard searchSettings.isFilter else { return }
 
         let calendar = Calendar.current
         
@@ -154,7 +154,11 @@ final class CarrierSearchViewModel: ObservableObject {
         let date = dateFormatter.string(from: Date())
         
         guard let fromCode = fromStation?.codes?.yandex_code,
-              let toCode = toStation?.codes?.yandex_code else { return }
+              let toCode = toStation?.codes?.yandex_code else
+        {
+            isLoading = false
+            return
+        }
         
         do {
             let searchResult = try await dataProvider.getSearchResult(

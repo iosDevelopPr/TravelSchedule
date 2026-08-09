@@ -17,6 +17,7 @@ extension ErrorsType {
         }
     }
     
+    @MainActor
     var image: UIImage {
         switch self {
         case .serverError:
